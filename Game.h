@@ -18,4 +18,8 @@ public:
 	void Reset();
 	void ResetBall();
 	void CheckCollision();
+
+private:
+	bool gameOver = false;
+	bool playerWon = false;
 };

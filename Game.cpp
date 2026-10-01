@@ -41,6 +41,8 @@ void Game::ResetBall()
 	ball.x_velocity = rand() % 2 ? 1 : -1;
 	ball.y_velocity = -1;
 	ball.moving = false;
+    gameOver = false;
+	playerWon = false;
 }
 
 bool Game::Update()
@@ -74,6 +76,15 @@ void Game::Render() const
 	paddle.Draw();
 	ball.Draw();
 
+	// display win or lose message
+	if (gameOver)
+	{
+		if (playerWon)
+			Console::WordWrap(15, 15, 30, "You win! Press 'R' to play again.");
+		else
+			Console::WordWrap(15, 15, 30, "You lose. Press 'R' to play again.");
+	}
+
 	// TODO #3 - Update render to render all bricks
 	// draw all the bricks in the vector
 	for (const Box& b : bricks)
@@ -102,6 +113,13 @@ void Game::CheckCollision()
 	}
 
 	// TODO #6 - If no bricks remain, pause ball and display (render) victory text with R to reset
+	// win condition
+	if (bricks.empty())
+	{
+		ball.moving = false;
+		gameOver = true;
+		playerWon = true;
+	}
 
 
 	if (paddle.Contains(ball.x_position + ball.x_velocity, ball.y_velocity + ball.y_position))
@@ -110,4 +128,11 @@ void Game::CheckCollision()
 	}
 
 	// TODO #7 - If ball touches bottom of window, pause ball and display (render) defeat text with R to reset
+	// lose condition
+	if (ball.y_position >= WINDOW_HEIGHT)
+	{
+		ball.moving = false;
+		gameOver = true;
+		playerWon = false;
+	}
 }
